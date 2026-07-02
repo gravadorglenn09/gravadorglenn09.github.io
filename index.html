@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glenn Mark Gravador — AI Workflow Specialist & Automation Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F7F8FA;
+    --bg-raised:#FFFFFF;
+    --ink:#14181F;
+    --ink-soft:#6B7480;
+    --navy:#1B2A4A;
+    --signal:#FF8A3D;
+    --hairline:#E2E4E8;
+    --hairline-strong:#C8CCD2;
+    --radius:3px;
+    --max:1040px;
+
+    /* n8n chat theme */
+    --chat--font-family:'IBM Plex Sans',sans-serif;
+    --chat--color--primary:var(--signal);
+    --chat--color--primary-shade-50:#e87a2e;
+    --chat--color--primary--shade-100:#d76c22;
+    --chat--color--secondary:var(--navy);
+    --chat--color-secondary-shade-50:#13203a;
+    --chat--color-dark:var(--navy);
+    --chat--color-light:#ffffff;
+    --chat--color-light-shade-50:var(--hairline);
+    --chat--color-light-shade-100:var(--hairline-strong);
+    --chat--border-radius:6px;
+    --chat--window--border:1px solid var(--hairline);
+    --chat--window--border-radius:12px;
+    --chat--header--background:var(--navy);
+    --chat--header--color:#ffffff;
+    --chat--message--bot--background:#ffffff;
+    --chat--message--bot--color:var(--ink);
+    --chat--message--user--background:var(--navy);
+    --chat--message--user--color:#ffffff;
+    --chat--toggle--background:var(--signal);
+    --chat--toggle--hover--background:#e87a2e;
+    --chat--toggle--active--background:#d76c22;
+    --chat--toggle--color:#ffffff;
+    --chat--input--border-radius:6px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;margin:0;letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  p{margin:0 0 14px;}
+  p:last-child{margin-bottom:0;}
+
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px;}
+
+  /* ---- statusbar ---- */
+  .statusbar{border-bottom:1px solid var(--hairline);background:var(--bg-raised);position:sticky;top:0;z-index:50;}
+  .statusbar .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:0.02em;}
+  .statusbar .brand{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;letter-spacing:-0.01em;}
+  .statusbar nav{display:flex;gap:26px;}
+  .statusbar nav a{text-decoration:none;color:var(--ink-soft);transition:color .15s ease;}
+  .statusbar nav a:hover{color:var(--ink);}
+  .pulse-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--signal);margin-right:7px;animation:pulse 2.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,138,61,.45);}70%{box-shadow:0 0 0 7px rgba(255,138,61,0);}100%{box-shadow:0 0 0 0 rgba(255,138,61,0);}}
+
+  /* ---- pipeline trace ---- */
+  .trace{position:relative;margin:0 auto;max-width:var(--max);padding:0 28px;}
+  .stage{position:relative;}
+
+  /* ---- hero ---- */
+  .hero{padding:64px 0 60px;}
+  .hero-inner{display:grid;grid-template-columns:1fr 260px;gap:48px;align-items:center;}
+  .hero h1{font-size:clamp(30px,4.5vw,46px);font-weight:700;line-height:1.1;}
+  .hero h1 .accent{color:var(--navy);}
+  .hero-sub{margin-top:18px;font-size:17px;color:var(--ink-soft);max-width:520px;}
+  .hero-meta{margin-top:24px;display:flex;flex-wrap:wrap;gap:9px;}
+  .chip{font-family:'IBM Plex Mono',monospace;font-size:12px;padding:5px 11px;border:1px solid var(--hairline-strong);border-radius:20px;color:var(--ink-soft);background:var(--bg-raised);}
+  .hero-cta{margin-top:28px;display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{font-family:'IBM Plex Mono',monospace;font-size:13px;text-decoration:none;padding:12px 20px;border-radius:var(--radius);display:inline-block;transition:background .15s ease,border-color .15s ease;}
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:#13203a;}
+  .btn-ghost{border:1px solid var(--hairline-strong);color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .hero-photo{width:260px;height:260px;border-radius:8px;overflow:hidden;border:1px solid var(--hairline);}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  /* ---- section shell ---- */
+  section{padding:60px 0;border-top:1px solid var(--hairline);}
+  .section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:36px;flex-wrap:wrap;gap:10px;}
+  .section-head h2{font-size:24px;font-weight:600;}
+
+  /* ---- workflow grid ---- */
+  .workflow-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(460px,1fr));gap:24px;}
+  .workflow-card{background:var(--bg-raised);border:1px solid var(--hairline);border-radius:6px;overflow:hidden;}
+  .workflow-img{width:100%;overflow:hidden;background:var(--bg);border-bottom:1px solid var(--hairline);}
+  .workflow-img img{width:100%;height:auto;display:block;transition:transform .3s ease;cursor:zoom-in;}
+  .workflow-card:hover .workflow-img img{transform:scale(1.02);}
+  .workflow-body{padding:20px 22px;}
+  .workflow-body h3{font-size:16px;font-weight:600;margin-bottom:8px;}
+  .workflow-body p{font-size:14px;color:var(--ink-soft);line-height:1.6;margin:0;}
+
+  /* ---- featured project (Error Notification) ---- */
+  .case{background:var(--bg-raised);border:1px solid var(--hairline);border-radius:6px;overflow:hidden;}
+  .case-top{padding:28px 30px 22px;border-bottom:1px solid var(--hairline);}
+  .case-top .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--signal);letter-spacing:0.06em;text-transform:uppercase;}
+  .case-top h3{font-size:22px;margin-top:8px;}
+  .case-top p{color:var(--ink-soft);margin-top:10px;max-width:620px;font-size:15px;}
+  .case-diagram{padding:22px 30px;border-bottom:1px solid var(--hairline);display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:12.5px;}
+  .node{background:var(--bg);border:1px solid var(--hairline-strong);border-radius:4px;padding:8px 12px;color:var(--ink);white-space:nowrap;}
+  .node.error{border-color:var(--signal);color:var(--signal);}
+  .arrow{color:var(--hairline-strong);font-size:14px;}
+  .case-img{margin:0;border-bottom:1px solid var(--hairline);}
+  .case-img img{width:100%;display:block;}
+  .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hairline);}
+  .case-cell{background:var(--bg-raised);padding:20px 22px;}
+  .case-cell .label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;}
+  .case-cell p{margin:0;font-size:14px;color:var(--ink);}
+
+  /* ---- stack ---- */
+  .stack-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:24px;}
+  .stack-group .label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;}
+  .stack-list{display:flex;flex-wrap:wrap;gap:7px;}
+  .pill{font-size:13.5px;padding:7px 12px;background:var(--bg-raised);border:1px solid var(--hairline);border-radius:4px;}
+
+  /* ---- certs ---- */
+  .cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+  .cert-card{background:var(--bg-raised);border:1px solid var(--hairline);border-radius:6px;overflow:hidden;}
+  .cert-img{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--bg);}
+  .cert-img img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;}
+  .cert-body{padding:18px 20px;}
+  .cert-body .issuer{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--signal);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;}
+  .cert-body h3{font-size:16px;font-weight:600;margin-bottom:8px;}
+  .cert-body p{font-size:13.5px;color:var(--ink-soft);margin:0;line-height:1.6;}
+
+  /* ---- journey / about ---- */
+  .journey{display:grid;grid-template-columns:1fr 1.5fr;gap:48px;align-items:start;}
+  .journey-photo{border-radius:8px;overflow:hidden;border:1px solid var(--hairline);}
+  .journey-photo img{width:100%;display:block;}
+  .journey-text .lede{font-size:18px;font-weight:500;color:var(--ink);margin-bottom:16px;font-family:'Space Grotesk',sans-serif;}
+  .journey-text p{color:var(--ink-soft);font-size:15px;}
+
+  /* ---- contact ---- */
+  .contact-block{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;}
+  .contact-block h2{font-size:28px;max-width:440px;}
+  .contact-cta{margin-top:32px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;}
+  
+  /* Unified Email Block */
+  .email-combo {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--ink);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    overflow: hidden;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .email-combo:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  .email-combo-label {
+    padding: 12px 18px;
+  }
+  .email-combo-address {
+    padding: 12px 20px;
+    font-weight: 500;
+  }
+
+  /* ---- chat tooltip ---- */
+  .chat-tooltip {
+    position: fixed;
+    bottom: 34px;
+    right: 90px;
+    background: var(--bg-raised);
+    border: 1px solid var(--hairline-strong);
+    padding: 12px 18px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    z-index: 9999;
+    animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.5s both;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .chat-tooltip.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+  }
+  .chat-tooltip::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: var(--bg-raised);
+    border-top: 1px solid var(--hairline-strong);
+    border-right: 1px solid var(--hairline-strong);
+  }
+
+  /* ---- lightbox popup ---- */
+  .lightbox {
+    display: none;
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(20, 24, 31, 0.85);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .lightbox.active {
+    display: flex;
+    opacity: 1;
+  }
+  .lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 6px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    object-fit: contain;
+  }
+
+  @keyframes bounceIn {
+    0% { opacity: 0; transform: translateX(20px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @media(max-width:800px){
+    .hero-inner{grid-template-columns:1fr;}
+    .hero-photo{width:160px;height:160px;}
+    .journey{grid-template-columns:1fr;}
+    .case-grid{grid-template-columns:1fr;}
+    .workflow-grid{grid-template-columns:1fr;}
+    .cert-grid{grid-template-columns:1fr;}
+    .statusbar nav{display:none;}
+    .chat-tooltip{display:none;}
+  }
+  @media(max-width:480px){
+    .email-combo { flex-direction: column; align-items: stretch; text-align: center; }
+    .email-combo-label { border-bottom: 1px solid rgba(255,255,255,0.1); }
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="statusbar">
+  <div class="wrap">
+    <div class="brand"></div>
+    <nav>
+      <a href="#proof"><span class="pulse-dot"></span>available for hire</a>
+      <a href="#proof">proof</a>
+      <a href="#stack">stack</a>
+      <a href="#certs">certs</a>
+      <a href="#journey">about</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </div>
+</div>
+
+<div class="trace">
+  <header class="hero stage">
+    <div class="hero-inner">
+      <div>
+        <h1>Glenn Mark Gravador<br><span class="accent">AI Workflow Specialist<br>&amp; Automation Architect</span></h1>
+        <p class="hero-sub">Bringing maritime precision to modern business automation. Using n8n, I transform fragmented tools into a unified, zero-failure engine that operates while you sleep.</p>
+        <div class="hero-meta">
+          <span class="chip">n8n Automation</span>
+          <span class="chip">AI Agents</span>
+          <span class="chip">RAG Pipelines</span>
+          <span class="chip">Claude / GPT / Gemini</span>
+          <span class="chip">Google Workspace</span>
+          <span class="chip">Telegram &amp; Meta API</span>
+        </div>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#proof">See my work &rarr;</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <img src="assets/portrait.png" alt="Glenn Mark Gravador" loading="eager" />
+      </div>
+    </div>
+  </header>
+
+  <section id="proof" class="stage">
+    <div class="section-head">
+      <h2>Flagship build</h2>
+    </div>
+
+    <div class="case">
+      <div class="case-top">
+        <div class="tag">Error Notification System · Universal</div>
+        <h3>Centralized Error Monitoring &amp; Incident Response</h3>
+        <p>A centralized incident response system that monitors active backend integrations for runtime failures. Upon detecting an exception, it captures diagnostic metadata — error codes, timestamps, broken node instances — and routes high-priority alerts to Telegram or Discord in real time, minimizing operational downtime across all connected pipelines.</p>
+      </div>
+
+      <div class="case-diagram">
+        <span class="node">execution fails</span>
+        <span class="arrow">→</span>
+        <span class="node">error captured</span>
+        <span class="arrow">→</span>
+        <span class="node">JS telemetry</span>
+        <span class="arrow">→</span>
+        <span class="node">alert routed</span>
+        <span class="arrow">→</span>
+        <span class="node">team notified</span>
+      </div>
+
+      <div class="case-img">
+        <img src="assets/image11.png" alt="Error Notification workflow screenshot" loading="lazy" />
+      </div>
+
+      <div class="case-grid">
+        <div class="case-cell">
+          <div class="label">Problem</div>
+          <p>Automations fail quietly. Without a catch layer, a broken workflow can sit undetected for days — costing time and client trust.</p>
+        </div>
+        <div class="case-cell">
+          <div class="label">Approach</div>
+          <p>Built a reusable n8n error-handling framework using custom JavaScript to structure telemetry and conditional routing to push alerts to the right channel instantly.</p>
+        </div>
+        <div class="case-cell">
+          <div class="label">Result</div>
+          <p>Runtime failures surface in real time via Telegram or Discord — turning silent breakdowns into immediate, actionable incident alerts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="workflows" class="stage">
+    <div class="section-head">
+      <h2>More workflows</h2>
+    </div>
+
+    <div class="workflow-grid">
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image2.png" alt="Automated Email-to-Database Pipeline" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>Automated Email-to-Database Pipeline</h3>
+          <p>Seamlessly connects Gmail to Notion — automatically extracting targeted incoming emails into organized database records. Uses looping logic and cross-referencing to prevent duplicates and eliminate manual data entry entirely.</p>
+        </div>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image3.png" alt="Conditional Data Pipeline" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>Conditional Data Pipeline</h3>
+          <p>Automatically evaluates incoming emails and intelligently routes attachments into designated Google Drive folders based on custom conditional logic. Eliminates manual file sorting and prevents duplicate uploads.</p>
+        </div>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image4.png" alt="AI Portfolio & Resume Retrieval Agent" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>AI Portfolio &amp; Resume Retrieval Agent</h3>
+          <p>Powered by Google Gemini and Hugging Face embeddings, this autonomous RAG agent acts as an intelligent portfolio concierge — contextually querying resume data via vector retrieval with integrated memory for session continuity.</p>
+        </div>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image5.png" alt="Automated Vector Ingestion Pipeline" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>Automated Vector Ingestion Pipeline</h3>
+          <p>Orchestrates the backend processing for scalable RAG systems by sync-loading documents from Google Drive, splitting via Character Text Splitter, generating embeddings via Hugging Face, and upserting into a Pinecone Vector Store.</p>
+        </div>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image6.png" alt="Multi-Agent E-commerce Content Engine" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>Multi-Agent E-commerce Content Engine</h3>
+          <p>Automates marketing workflows by orchestrating Groq-powered AI agents to transform raw inventory data into high-converting, SEO-optimized product copy — from Google Sheet entry to final content publication.</p>
+        </div>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image7.png" alt="Local AI B2B Icebreaker Factory" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>The Local AI B2B Icebreaker Factory</h3>
+          <p>Optimizes B2B outbound by dynamically generating highly contextual, personalized icebreakers for lead engagement — ingesting prospect data, extracting professional hooks via AI, and synthesizing tailored communication templates.</p>
+        </div>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image8.png" alt="Automated Client Onboarding Pipeline" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>Automated Client Onboarding Pipeline</h3>
+          <p>Captures web-submitted data and structures it into a standardized Markdown client brief. Automatically provisions dedicated Google Drive folders and uploads parsed project files in real time via Google OAuth2.</p>
+        </div>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image9.png" alt="AI-Powered Lead Qualification Engine" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>AI-Powered Lead Qualification Engine</h3>
+          <p>Captures inbound prospects via webhook, enriches them via HTTP data calls, and scores viability using a Gemini-powered AI Agent. Qualified leads are logged in Sheets, personalized outreach is drafted by Groq, and Telegram alerts fire instantly.</p>
+        </div>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-img">
+          <img src="assets/image10.png" alt="Human-in-the-Loop Validation Router" loading="lazy" />
+        </div>
+        <div class="workflow-body">
+          <h3>Human-in-the-Loop (HITL) Validation Router</h3>
+          <p>Implements a hybrid automation framework that inserts human oversight into critical data paths. Low-risk entries are auto-processed while high-stakes exceptions are routed to a validation queue — pausing until human approval is given.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="stack" class="stage">
+    <div class="section-head">
+      <h2>The stack</h2>
+    </div>
+
+    <div class="stack-groups">
+      <div class="stack-group">
+        <div class="label">Orchestration</div>
+        <div class="stack-list">
+          <span class="pill">n8n</span>
+          <span class="pill">Webhook pipelines</span>
+          <span class="pill">Event-driven flows</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <div class="label">AI Models</div>
+        <div class="stack-list">
+          <span class="pill">Claude AI</span>
+          <span class="pill">OpenAI GPT</span>
+          <span class="pill">Google Gemini</span>
+          <span class="pill">Groq</span>
+          <span class="pill">Ollama (local)</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <div class="label">Data &amp; Retrieval</div>
+        <div class="stack-list">
+          <span class="pill">RAG pipelines</span>
+          <span class="pill">Pinecone</span>
+          <span class="pill">Hugging Face</span>
+          <span class="pill">Google Sheets</span>
+          <span class="pill">Notion</span>
+        </div>
+      </div>
+      <div class="stack-group">
+        <div class="label">Integrations</div>
+        <div class="stack-list">
+          <span class="pill">Meta Graph API</span>
+          <span class="pill">Telegram Bot API</span>
+          <span class="pill">Gmail / OAuth2</span>
+          <span class="pill">Google Drive</span>
+          <span class="pill">Google Workspace</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="certs" class="stage">
+    <div class="section-head">
+      <h2>Certifications</h2>
+    </div>
+
+    <div class="cert-grid">
+
+      <div class="cert-card">
+        <div class="cert-img">
+          <img src="assets/cert_claude101.png" alt="Claude 101 Certificate" loading="lazy" />
+        </div>
+        <div class="cert-body">
+          <div class="issuer">Anthropic</div>
+          <h3>Claude 101</h3>
+          <p>Covers the foundational principles of working with Claude, including effective prompt design, understanding model capabilities, and responsible AI use. This certification builds the practical baseline for deploying Claude in real-world automation contexts. It serves as the entry point to Anthropic's professional AI curriculum.</p>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-img">
+          <img src="assets/cert_fluency.png" alt="AI Fluency Certificate" loading="lazy" />
+        </div>
+        <div class="cert-body">
+          <div class="issuer">Anthropic</div>
+          <h3>AI Fluency: Framework &amp; Foundations</h3>
+          <p>Establishes a structured mental model for working with AI systems — covering how large language models reason, where they excel, and where human oversight remains critical. The course bridges the gap between technical AI knowledge and practical business application. Developed in partnership with leading academic institutions including UCC, Ringling College, and the Higher Education Authority.</p>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-img">
+          <img src="assets/cert_cowork.png" alt="Introduction to Claude Cowork Certificate" loading="lazy" />
+        </div>
+        <div class="cert-body">
+          <div class="issuer">Anthropic</div>
+          <h3>Introduction to Claude Cowork</h3>
+          <p>Explores how to use Claude as a collaborative AI partner for complex, multi-step tasks — including research, analysis, and long-form workflows. The course develops skills for orchestrating AI-assisted pipelines that combine tool use with human direction. It directly informs how I structure agentic workflows in my automation projects.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="journey" class="stage">
+    <div class="section-head">
+      <h2>The journey</h2>
+    </div>
+
+    <div class="journey">
+      <div class="journey-photo">
+        <img src="assets/portrait.png" alt="Glenn Mark Gravador" loading="lazy" />
+      </div>
+      <div class="journey-text">
+        <p class="lede">From engine rooms to automation pipelines — same job, different machinery.</p>
+        <p>Glenn spent years in maritime engineering, where a missed signal or an unmonitored system isn't a minor bug — it's a real-world failure with real consequences. That habit of building for reliability, not just function, now shapes every automation workflow he designs.</p>
+        <p>Today he builds intelligent automation systems using n8n, Claude, and a suite of AI models — turning fragmented business tools into unified, zero-failure engines. His maritime discipline means he doesn't just build workflows that run; he builds workflows that don't fail silently.</p>
+        <p>Based in Sibulan, Negros Oriental in the Philippines, Glenn is actively seeking remote AI automation roles with international teams who want operational-grade reliability in their AI workflows.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="stage">
+    <div class="contact-block">
+      <div>
+        <h2>Open to remote AI automation roles — let's build something that doesn't fail.</h2>
+        <div class="contact-cta">
+          
+          <a class="email-combo" href="mailto:gravadorglenn09@gmail.com">
+            <span class="email-combo-label">Send me an email &rarr;</span>
+            <span class="email-combo-address">gravadorglenn09@gmail.com</span>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div id="chat-tooltip" class="chat-tooltip">Want to know more about Glenn? Chat with me</div>
+
+<div id="lightbox" class="lightbox">
+  <img id="lightbox-img" src="" alt="Enlarged Certificate">
+</div>
+
+<script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+  createChat({
+    webhookUrl: 'https://gravadorglennmark09.app.n8n.cloud/webhook/8cba06a3-1e7d-48e5-99df-e71694b51dfa/chat',
+    mode: 'window',
+    showWelcomeScreen: false,
+    initialMessages: [
+      "Hi there! 👋 I'm the AI Assistant for Glenn Mark Gravador, AI Workflow Specialist & Automation Architect. Ask me about his n8n automation work, AI pipelines, or any of his builds — I'm here to help."
+    ],
+    i18n: {
+      en: {
+        title: '',
+        subtitle: '',
+        getStarted: 'Start chat',
+        inputPlaceholder: 'Ask about my work…',
+        footer: ''
+      }
+    }
+  });
+</script>
+
+<script>
+  // Hide the tooltip automatically when a user clicks anywhere on the page
+  document.addEventListener('click', function(e) {
+    const tooltip = document.getElementById('chat-tooltip');
+    if(tooltip && !e.target.closest('#chat-tooltip')) {
+      tooltip.classList.add('hidden');
+    }
+  });
+
+  // Lightbox functionality for certificates and workflows
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+
+  document.querySelectorAll('.cert-img img, .workflow-img img, .case-img img').forEach(img => {
+    img.addEventListener('click', function(e) {
+      e.stopPropagation();
+      lightboxImg.src = this.src;
+      lightbox.classList.add('active');
+    });
+  });
+
+  lightbox.addEventListener('click', function() {
+    lightbox.classList.remove('active');
+  });
+</script>
+
+</body>
+</html>
